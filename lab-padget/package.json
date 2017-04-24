@@ -1,0 +1,28 @@
+{
+  "name": "lab-padget",
+  "version": "1.0.0",
+  "description": "Lab 6",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmpadget/lab-06-tcp-chat.git"
+  },
+  "keywords": [
+    "lab",
+    "6"
+  ],
+  "author": "Michael",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mmpadget/lab-06-tcp-chat/issues"
+  },
+  "homepage": "https://github.com/mmpadget/lab-06-tcp-chat#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
