@@ -26,7 +26,7 @@ ee.on('@all', (client, string) => {
 ee.on('@nick', (client, string) => {
   //the string you argue minus whitespace = their nickname
   client.nickName = string.trim();
-  client.socket.write(`Samuel says: you have just changed your name to '${client.nickName}', motha fucka!!`);
+  client.socket.write(`Samuel says: you have just changed your name to '${client.nickName}', motha fucka!!\n`);
 });
 //to private message another user
 ee.on('@pm', (client, string) => {
