@@ -19,7 +19,18 @@ ee.on('@all', (client, string) => {
 
 ee.on('@nick', (client, string) => {
   pool.forEach(c => c.socket.write(`${client.nickName} is now: ${string}`));
-  client.nickName = string;
+
+  client.nickName = string.split(' ').slice(0).join(' ').trim();
+});
+
+ee.on('@dm', (client, clientB, string) => {
+
+  pool.forEach(c => {
+
+    if(c.nickName === clientB) {
+      c.socket.write(`${client.nickName} wispered to you: ${string}`);
+    }
+  });
 });
 
 server.on('connection', socket => {
@@ -34,8 +45,13 @@ server.on('connection', socket => {
       return;
     } else if (command === '@nick'){
       ee.emit('@nick', client, data.toString().split(' ').slice(1).join(' '));
-    }
+      return;
+    } else if (command === '@dm'){
+      let clientB = data.toString().split(' ')[1];
 
+      ee.emit('@dm', client, clientB, data.toString().split(' ').slice(2).join(' ').trim());
+      return;
+    }
     ee.emit('default', client, data.toString());
   });
 });
