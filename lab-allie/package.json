@@ -10,7 +10,9 @@
   "devDependencies": {},
   "scripts": {
     "test": "mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint"
+
   },
   "author": "Allie Grampa",
   "license": "MIT"
