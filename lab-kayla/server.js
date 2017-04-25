@@ -32,4 +32,20 @@ server.on('connection', socket => {
   });
 });
 
+ee.on('@nick', (client, newNick) => {
+  client.nickName = newNick.trim();
+  client.socket.write(`Name changed to ${client.nickName}\n`);
+});
+
+ee.on('@dm', (client, string) => {
+  let targetUser = pool.find(target => {
+    return target.nickName === string.split(' ').shift().trim();
+  });
+  let message = `${string.split(' ').slice(1).join()}`;
+  if (targetUser) {
+    client.socket.write(`To ${targetUser.nickName}: ${message}`);
+    targetUser.socket.write(`From ${client.nickName}: ${message}`);
+  }
+});
+
 server.listen(PORT, () => console.log(`Listening in on port ${PORT}`));
