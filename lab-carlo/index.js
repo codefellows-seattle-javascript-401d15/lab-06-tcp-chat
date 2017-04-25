@@ -25,11 +25,6 @@ ee.on('/close', client => {
   pool.splice(pool.indexOf(client.socket), 1);
 });
 
-// ee.on('/dm', (client, string) => {
-//
-// });
-
-
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
