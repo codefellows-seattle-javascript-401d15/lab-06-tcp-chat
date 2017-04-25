@@ -15,9 +15,27 @@ ee.on('default', (client, string) => {
   client.socket.write(`Not a valid command: ${string.split(' ', 1)}\n`);
 });
 
+// Trigger a broadcast event for everyone.
 ee.on('/all', (client, string) => {
   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
 });
+
+// Allow a user change their nickname.
+// ee.on('/nick', (client, string) => {
+//   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
+// });
+
+// Allow a user to send a message directly to another user by nick name.
+// ee.on('/dm', (client, string) => {
+//   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
+// });
+
+// When a user types their nickname it should be printed. teapot: Sup Hacker?
+
+// When sockets are connected with the ClientPool they should be given event listeners for data, error, and close events.
+// When a socket emits the close event the socket should be removed from the client pool!
+// When a socket emits the error event the error should be logged on the server
+// When a socket emits the data event the data should be logged on the server and the \wack commands below should be implemented
 
 server.on('connection', socket => {
   // Client code.
@@ -28,7 +46,7 @@ server.on('connection', socket => {
 
   // Whenever data starts to stream to sockets, do some stuff.
   socket.on('data', data => {
-    // Shift to drop command off the front. Trim takes off white space (needs a string).
+    // Shift to drop command off the front. Trim takes off white space.
     let command = data.toString().split(' ').shift().trim();
     // Use event emitter.
     if(command.startsWith('/')) {
