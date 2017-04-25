@@ -1,0 +1,22 @@
+{
+  "name": "lab06-kaylee",
+  "version": "1.0.0",
+  "description": "basic tcp chat server",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Kaylee",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
