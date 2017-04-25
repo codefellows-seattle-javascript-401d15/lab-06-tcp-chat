@@ -18,17 +18,26 @@ ee.on('default', function(client, string) {
 });
 
 ee.on('/all', function(client, string) {
-  pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
+  pool.forEach(c => c.socket.write(`${client.nickName}: ${string}\n`));
 });
 
 ee.on('/nick', function(client, string) {
-  client.nickName = string.trim();
+  client.nickName = string.trim().split(' ').join('').toUpperCase();
   client.socket.write(`You changed your nickname to ${client.nickName}\n`);
   console.log(`${client.userName} changed their nickname to ${client.nickName}`);
 });
 
-// ee.on('/dm', function(client, string) {
-// }
+ee.on('/dm', function(client, string) {
+  let nickName = string.split(' ').shift().trim().toUpperCase();
+  let message = string.split(' ').slice(1).join(' ').trim();
+
+  pool.forEach(dm => {
+    if (dm.nickName === nickName) {
+      dm.socket.write(`Private Message from ${client.nickName}: ${message}\n`);
+    }
+  });
+  client.socket.write(`You private messaged ${nickName}: ${message}\n`);
+});
 
 server.on('connection', socket => {
   let client = new Client(socket);
