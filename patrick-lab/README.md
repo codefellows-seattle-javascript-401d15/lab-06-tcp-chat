@@ -37,4 +37,8 @@ To leave the chatroom enter
 /close
 ```
 
-Direct message coming soon
+Direct message sent to other user
+```
+/dm
+```
+Followed by the other users nickname, space and then the message
