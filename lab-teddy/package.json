@@ -1,0 +1,28 @@
+{
+  "name": "lab-teddy",
+  "version": "1.0.0",
+  "description": "tcp lab",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha chai",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001b[2~\u001b[2~\u001b[2~https://github.com/tedsters/lab-06-tcp-chat.git"
+  },
+  "keywords": [
+    "tcp",
+    "test",
+    "js"
+  ],
+  "author": "David Teddy",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
