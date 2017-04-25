@@ -21,6 +21,15 @@ ee.on('/all', function(client, string) {
   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
 });
 
+ee.on('/nick', function(client, string) {
+  client.nickName = string.trim();
+  client.socket.write(`You changed your nickname to ${client.nickName}\n`);
+  console.log(`${client.userName} changed their nickname to ${client.nickName}`);
+});
+
+// ee.on('/dm', function(client, string) {
+// }
+
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
@@ -29,7 +38,7 @@ server.on('connection', socket => {
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
     console.log(`${client.nickName}: ${data}`);
-    if(command.startsWith('@')) {
+    if(command.startsWith('/')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
@@ -43,7 +52,7 @@ server.on('connection', socket => {
 
   socket.on('close', data => {
     ee.emit('quit', client, data.toString());
-    console.log('socket closed');
+    console.log(`${client.nickName} has left the conversation`);
 
   });
 });
