@@ -2,11 +2,9 @@
 
 const expect = require('chai').expect;
 const net = require('net');
-const client = new net.Socket();
 const server = require('../server.js');
 const Client = require('../model/client.js');
-const EE = require('events').EventEmitter;
-const ee = new EE();
+
 
 describe('Client Test', function() {
   before('Listening on Server', function(done) {
@@ -57,23 +55,26 @@ describe('Client Test', function() {
         });
       });
     });
+    describe('dm command', function(err) {
+      if(err) throw err;
 
-    it('should send a dm', function(done) {
+      it('should send a dm', function(done) {
 
-      let client1 = new Client();
-      client1.nickName = 'Guest-34';
+        let client1 = new Client();
+        client1.nickName = 'Guest-34';
 
-      let client2 = new Client();
-      client2.nickName = 'Guest-50';
+        let client2 = new Client();
+        client2.nickName = 'Guest-50';
 
-      let connect = net.connect({port: 3000}, function() {
-        connect.write('/dm test');
-        connect.on('data', function(data) {
-          expect(data.toString()).to.include('test');
-          expect(data.toString()).to.include('Guest-34');
-          expect(data.toString()).to.include('Guest-50');
+        let connect = net.connect({port: 3000}, function() {
+          connect.write('/dm test');
+          connect.on('data', function(data) {
+            expect(data.toString()).to.include('test');
+            expect(data.toString()).to.include('Guest-34');
+            expect(data.toString()).to.include('Guest-50');
+          });
+          done();
         });
-        done();
       });
     });
   });
