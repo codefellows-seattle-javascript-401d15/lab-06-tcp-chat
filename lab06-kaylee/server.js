@@ -4,7 +4,7 @@ const Client = require('./model/client.js');
 const net = require('net');
 const EE = require('events').EventEmitter;
 const ee = new EE();
-const server = net.createServer();
+const server = module.exports = net.createServer();
 const PORT = process.env.PORT || 3000;
 const pool = [];
 
@@ -28,6 +28,11 @@ ee.on('/dm', (client, string) => {
   });
 });
 
+let closeSocket = function(socket) {
+  pool.splice(pool.indexOf(socket), 1);
+  pool.forEach(c => c.socket.write(`${c.userName} has left the chatroom.`));
+};
+
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
@@ -46,7 +51,7 @@ server.on('connection', socket => {
     if(err) throw err;
   });
 
-//   socket.on('close', )
+  socket.on('close', closeSocket());
 });
 
 
