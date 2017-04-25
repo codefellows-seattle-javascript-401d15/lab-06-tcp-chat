@@ -9,5 +9,5 @@
 * \dm **__user__ message**
   * Sends the **message** to the **__user__**
 
-## The default local port is 3000.
-### Connect using telnet.
+## Connect using telnet.
+### The default local port is 3000.
