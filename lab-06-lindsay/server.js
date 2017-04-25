@@ -21,10 +21,21 @@ ee.on('/nick', (client, string) => {
   client.nickName = string.trim();
 });
 
+ee.on('/dm', (client, string) => {
+  let user = string.split(' ')[0];
+  let message = string.split(' ').slice(1).join(' ').trim();
+
+  pool.forEach(c => {
+    if(c.nickName === user) {
+      c.socket.write(`${c.nickName}: ${message}`);
+    }
+  });
+});
+
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
-  pool.forEach(c => c.socket.write(`${client.nickrName} has connected!\n`));
+  pool.forEach(c => c.socket.write(`${client.nickName} has connected!\n`));
 
   socket.on('data', data => {
 
