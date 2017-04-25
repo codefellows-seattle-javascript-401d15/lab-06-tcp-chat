@@ -37,7 +37,7 @@ describe('Client Test', function() {
           connect.write('/nick test');
           connect.on('data', function(data) {
             expect(data.toString()).to.include('test');
-            console.log(data.toString());
+            expect(client1.nickName).to.be.equal('test');
           });
           done();
         });
@@ -52,10 +52,28 @@ describe('Client Test', function() {
           connect.write('/all Hello everyone');
           connect.on('data', function(data) {
             expect(data.toString()).to.include('Hello everyone');
-            console.log(data.toString());
           });
           done();
         });
+      });
+    });
+
+    it('should send a dm', function(done) {
+
+      let client1 = new Client();
+      client1.nickName = 'Guest-34';
+
+      let client2 = new Client();
+      client2.nickName = 'Guest-50';
+
+      let connect = net.connect({port: 3000}, function() {
+        connect.write('/dm test');
+        connect.on('data', function(data) {
+          expect(data.toString()).to.include('test');
+          expect(data.toString()).to.include('Guest-34');
+          expect(data.toString()).to.include('Guest-50');
+        });
+        done();
       });
     });
   });
