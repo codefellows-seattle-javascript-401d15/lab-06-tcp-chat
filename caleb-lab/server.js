@@ -4,11 +4,10 @@ const Client = require(`./model/client.js`);
 const net = require('net');
 const EE = require('events').EventEmitter;
 const ee = new EE();
-const server = net.createServer();
+const server = module.exports = net.createServer();
 const PORT = process.env.PORT || 3000;
 
 const pool = [];
-
 
 function removeSocket(socket){
   pool.splice(pool.indexOf(socket), 1);
@@ -27,6 +26,7 @@ ee.on('@all', (client, string) => {
 ee.on('@nick', (client, string) => {
   //the string you argue minus whitespace = their nickname
   client.nickName = string.trim();
+  client.socket.write(`Samuel says: you have just changed your name to '${client.nickName}', motha fucka!!`);
 });
 //to private message another user
 ee.on('@pm', (client, string) => {
@@ -69,6 +69,7 @@ server.on('connection', socket => {
 
   socket.on('close', function(){
     console.log(`${client.nickName} has left the room.\n`);
+    pool.forEach(client.socket.write(`${client.nickName} has left the room.\n`));
     removeSocket(socket);
   });
 });
