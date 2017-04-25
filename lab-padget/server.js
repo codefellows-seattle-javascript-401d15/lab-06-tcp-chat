@@ -40,30 +40,39 @@ ee.on('/nick', (client, string) => {
 // Allow a user to send a message directly to another user by nick name.
 ee.on('/dm', (client, string) => {
   // for on pool if(i @ the pool)
-  let target = string.split(' ').shift().trim(); // target nickname
+  // let target = string.split(' ').shift().trim(); // target nickname
+  // console.log(target);
+  let target = string.split(' ')[0]; // target nickname
   console.log(target);
   let message = string.split(' ').slice(1).join(' '); // message to send to nickname
   console.log(message);
 
   console.log('Pool before: ', pool);
 
-  //pool.forEach(user => user.socket.write(`${client.nickName}: ${string}\n`));
-
-  for (let i = 0; i < pool.length; i++) {
-    // console.log(pool[i].nickname);
-    // pool[i].socket.write(message);
-
-    if (target === 'steven') {
-      console.log(pool[i].nickName);
-      console.log('Pool in loop: ', pool);
-      pool[i].socket.write(message); // string value
+  pool.forEach(ctx => {
+    if (ctx.nickName === target) {
+      ctx.socket.write(`${client.nickName}: ${message}\n`);
     }
+  });
+    //target => target.socket.write(`${client.nickName}: ${string}\n`));
+  // console.log('Pool after: ', pool);
 
-    // if (target === pool[i].nickname) {
-    //   console.log(pool[i].nickname);
-    //   pool[i].socket.write(message); // string value
-    // }
-  }
+  // for (let i = 0; i < pool.length; i++) {
+  //   // console.log(pool[i].nickname);
+  //   // pool[i].socket.write(message);
+  //
+  //   // Writes to both users
+  //   if (target === 'steven') {
+  //     console.log(pool[i].nickName);
+  //     console.log('Pool in loop: ', pool);
+  //     pool[i].socket.write(message); // string value
+  //   }
+  //
+  //   // if (target === pool[i].nickname) {
+  //   //   console.log(pool[i].nickname);
+  //   //   pool[i].socket.write(message); // string value
+  //   // }
+  // }
 
   // Enter "/dm nickname message." Send to a user.
   //client.socket.write(`Entered dm command`);
