@@ -18,11 +18,11 @@ describe('fs module', function() {
       //   done();
       // });
     });
-    // it('should return a string for plant name', function() {
-    //   assert.equal(newPlant.name, 'Tomato');
+    // it('should return a string', function() {
+    //   assert.equal(instance.name, 'Text');
     // });
-    // it('should return a string with planting depth', function() {
-    //   assert.equal(typeof newPlant.depth, 'string');
+    // it('should return a string', function() {
+    //   assert.equal(typeof instance.name, 'string');
     // });
   });
 });
