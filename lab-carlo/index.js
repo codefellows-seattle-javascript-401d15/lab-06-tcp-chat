@@ -20,14 +20,9 @@ ee.on('/nick', (client, string) => {
   client.nickName = string.trim();
 });
 
-ee.on('error', (client, e) => {
-  client.socket.write(`ERROR:${e.code.split(' ', 1)}`);
-  server.close();
-});
-
-ee.on('close', client => {
-  pool.pop(client);
-  pool.forEach(c => c.socket.write(`${client.userName} has disconnected\n`));
+ee.on('/close', client => {
+  pool.forEach(c => c.socket.write(`${client.userName} has peaced out!\n`));
+  pool.splice(pool.indexOf(client.socket), 1);
 });
 
 // ee.on('/dm', (client, string) => {
@@ -51,6 +46,14 @@ server.on('connection', socket => {
       pool.forEach(c => c.socket.write(`${client.userName} has changed their name to ${client.nickName}\n`));
       return;
     }
+    if(command.startsWith('/close')){
+      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
+      return;
+    }
+
+    socket.on('error', err => {
+      console.log(err);
+    });
 
     ee.emit('default', client, data.toString());
   });
