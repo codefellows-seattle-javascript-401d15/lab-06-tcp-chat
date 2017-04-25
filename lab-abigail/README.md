@@ -3,22 +3,9 @@
 ======
 
 # About TCP Chat Server
-The TCP chat server allows users to communicate with other others using commands written into the command line of their terminals. Using TCP protocol, the users are able to communicate in real-time.
+The TCP chat server allows users to communicate with other others using commands written into the command line of their terminals. Using TCP protocol, the users are able to communicate in real-time. Users are able to broadcast messages to all users, direct message specific users, and change their automated nicknames. 
 
-# Include
-* gitignore
-* eslint
-* package.json
-* include any npm scripts for starting server, linting, testing, etc
-* readme
- * Write a paragraph about your project
- * Write docs on how to get the project running
- * Write docs on how to connect to the server
-* test your code
-  * ensure that all of your methods have test coverage
-  * write tests which start your server, send and receive, and confirm functionality
-
-## Log In Directions
+## Connect to Server Directions
 1. The admin must install file resources in local copy by running `npm init` in their command line.
 2. The admin must run the file on localhost: 3000 by running the command `nodemon server` in their command line.
 3. Users on the same computer may log into the program by running `telnet localhost 3000` in their command line.
