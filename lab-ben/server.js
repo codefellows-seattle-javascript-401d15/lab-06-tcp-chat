@@ -75,5 +75,4 @@ server.on('connection', socket => {
 
     ee.emit('default', client, data.toString());
   });
-
 });
