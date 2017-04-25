@@ -17,7 +17,7 @@ ee.on('/all', (client, string) => {
 });
 
 ee.on('/nick', (client, string) => {
-  client.nickName = `${string}`;
+  client.nickName = string.trim();
 });
 
 ee.on('error', (client, e) => {
@@ -47,7 +47,7 @@ server.on('connection', socket => {
       return;
     }
     if(command.startsWith('/nick')) {
-      client.nickName = data.toString().split(' ').slice(1).join(' ');
+      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       pool.forEach(c => c.socket.write(`${client.userName} has changed their name to ${client.nickName}\n`));
       return;
     }
