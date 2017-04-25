@@ -25,6 +25,16 @@ ee.on('/close', client => {
   pool.splice(pool.indexOf(client.socket), 1);
 });
 
+ee.on('/dm', (client, string) => {
+  let target = string.split(' ')[0];
+  let message = string.split(' ').slice(1).join('');
+  pool.forEach(c => {
+    if(c.nickName === target) {
+      c.socket.write(`${c.nickName}: ${message}`);
+    }
+  });
+});
+
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
@@ -43,6 +53,12 @@ server.on('connection', socket => {
     }
     if(command.startsWith('/close')){
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
+      return;
+    }
+
+    if(command.startsWith('/dm')){
+      ee.emit(command, client, data.toString().split(' ').slice(1).join(' ').trim());
+      pool.forEach(c => c.socket.write(`${client.nickName} sent a dm\n`));
       return;
     }
 
