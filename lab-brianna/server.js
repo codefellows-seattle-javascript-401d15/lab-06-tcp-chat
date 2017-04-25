@@ -44,21 +44,23 @@ server.on('connection', socket => {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
-    if(command.startsWith('\\all')){
-      ee.emit(command, client, data)
-    }
-
-    if(command.startsWith('\\nick')){
-      ee.emit(command, client, data)
-    }
-
-    if(command.startsWith('\\dm')){
-      ee.emit(command, client, data)
-    }
-
-    if(command.startsWith(`${nickName}`)){
-      ee.emit(command, client, data)
-    }
+    //
+    // if(command.startsWith('\\all')){
+    //   ee.emit(command, client, data.toString())
+    //   return
+    // }
+    //
+    // if(command.startsWith('\\nick')){
+    //   ee.emit(command, client, data)
+    // }
+    //
+    // if(command.startsWith('\\dm')){
+    //   ee.emit(command, client, data)
+    // }
+    //
+    // if(command.startsWith(`${nickName}`)){
+    //   ee.emit(command, client, data)
+    // }
 
     ee.emit('default', client, data.toString());
   });
