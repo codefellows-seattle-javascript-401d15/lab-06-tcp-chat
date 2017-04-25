@@ -6,7 +6,6 @@ const EE = require('events').EventEmitter;
 const ee = new EE();
 const server = net.createServer();
 const PORT = process.env.PORT || 3000 ;
-// const parser = require('./lib/parser.js');
 
 const pool = [];
 let users = 0;
@@ -15,26 +14,22 @@ ee.on('default', (client, string) => {
   client.socket.write(`Not a valid command: ${string.split(' ', 1)}\n`);
 });
 
-ee.on('/', (client, string) => {
-  pool.forEach(c => c.socket.write(`User : ${client.userName}: ${string}`));
-});
-
 ee.on('/all', (client, string) => {
-  pool.forEach(c => c.socket.write(`${client.userName}: ${string}`));
+  pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
 });
 
 ee.on('/nick', (client, string) => {
-  client.userName = string;
-  pool.forEach(c => c.socket.write(`${client.userName} Your nickname is now : ${string}`));
-
+  client.nickName = string.trim();
 });
 
 ee.on('/dm', (client, string) => {
-  let receiver = string
-  let message = string
-  pool.forEach(c =>
-    // if(c.username)
-    c.socket.write(`${client.nickName}: ${string}`));
+  let receiver = string.split(' ')[0];
+  let message = string.split(' ').slice(1).join(' ');
+  pool.forEach(c => {
+    if(c.nickName === receiver) {
+      c.socket.write(`${c.nickName}: ${message}`);
+    }
+  });
 });
 
 ee.on('/wat', (client) => {
@@ -74,19 +69,7 @@ server.on('connection', socket => {
 
     let command = data.toString().split(' ').shift().trim();
 
-    if(command.startsWith('/all')) {
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-      return;
-    }
-    if(command.startsWith('/wat')) {
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-      return;
-    }
-    if(command.startsWith('/nick')) {
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-      return;
-    }
-    if(command.startsWith('/dm')) {
+    if(command.startsWith('/')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
@@ -95,7 +78,7 @@ server.on('connection', socket => {
 
   });
 
-  socket.on('end', function () {
+  socket.on('close', function () {
     console.log(`${clientName} has left the chat.`);
     removeSocket(socket);
   });
@@ -105,15 +88,12 @@ server.on('connection', socket => {
   });
 });
 
-
 function removeSocket (socket) {
   pool.splice(pool.indexOf(socket), 1);
 }
 
-
 server.on('error', err => {
   console.log('Oh Shit! Server has errors' + err.message);
 });
-
 
 server.listen(PORT, () => console.log(`Listening on: ${PORT}`));
