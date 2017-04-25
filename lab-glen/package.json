@@ -1,0 +1,20 @@
+{
+  "name": "lab-glen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  },
+  "dependencies": {
+    "net": "^1.0.2",
+    "uuid": "^3.0.1"
+  }
+}
