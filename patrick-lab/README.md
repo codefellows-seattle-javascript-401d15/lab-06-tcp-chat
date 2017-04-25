@@ -1,8 +1,8 @@
-#Patrick Sheridan#
-##Lab-06 TCP Chat Server##
+#Patrick Sheridan
+##Lab-06 TCP Chat Server
 
-###Project###
+###Project
 
-###Instructions To Run###
+###Instructions To Run
 
-###How to Connect To Server###
+###How to Connect To Server
