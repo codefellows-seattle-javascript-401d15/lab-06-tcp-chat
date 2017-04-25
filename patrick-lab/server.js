@@ -21,9 +21,14 @@ ee.on('/nick', (client, string) => {
   client.nickname = string.trim();
 });
 
-ee.on('/dm', (client, string)=>{
-  pool.find(client.nickname);
-  console.log(client.nickname);
+ee.on('/dm', (client, string) => {
+  let target = string.split(' ')[0];
+  let message = string.split(' ').slice(1).join('');
+  pool.forEach(c => {
+    if(c.nickname === target) {
+      c.socket.write(`${c.nickname}: ${message}`);
+    }
+  });
 });
 
 ee.on('/close', (client) =>{
