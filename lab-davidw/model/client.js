@@ -1,9 +1,9 @@
 'use strict';
 
-const uuid = require('node-uuid');
+const uuidV4 = require('uuid/v4');
 
 module.exports = function(socket) {
   this.socket = socket;
-  this.nickName = uuid.v4();
+  this.nickName = uuidV4();
   this.userName = `#:${Math.floor((Math.random() +1)*(100))}`;
 };

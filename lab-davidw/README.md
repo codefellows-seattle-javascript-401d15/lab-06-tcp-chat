@@ -14,7 +14,7 @@ This will include:
 --- ```close``` event must remove the socket from the client pool
 --- ```error``` should be logged on the server
 --- ```data``` should be logged to the server
---- ```\whack``` commands will be implimented as follows:
+--- ```\whack``` commands will be implemented as follows:
 
 ## commands
 - ```\all``` will trigger a broadcast event

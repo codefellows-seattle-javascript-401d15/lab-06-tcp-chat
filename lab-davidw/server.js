@@ -34,7 +34,7 @@ server.on('connection', socket => {
   });
 
   //When a socket emits the error event log on server
-  socket.on('error', (err) => {
+  socket.on('error', err => {
     console.error(err);
   });
 
@@ -52,13 +52,12 @@ server.on('connection', socket => {
 });
 
 ee.on('/nick', (client, string) => {
-  for (var i = 0; i < pool.length; i++) {
-    if(string.trim() === pool[i].nickName) {
+  pool.forEach(c => {
+    if(string.trim() === c.nickName) {
       client.socket.write(`${string} already used. Please pick another nickname.\n`);
-      return;
     }
-    pool[i].socket.write(`${client.nickName} has changed their nickname to ${string}.\n`);
-  }
+    c.socket.write(`${client.nickName} has changed their nickname to ${string}.\n`);
+  });
   client.nickName = string.trim();
 });
 
@@ -66,7 +65,7 @@ ee.on('/nick', (client, string) => {
 ee.on('/dm', (client, string) => {
   for (var i = 0; i < pool.length; i++) {
     if (string.split(' ')[0] === pool[i].nickName) {
-      client.socket.write(`${client.nickName}(Direct Message to ${pool[i].nickName}): ` + string.split( ' ').slice(1).join(' '));
+      client.socket.write(`${client.nickName}(Direct Message to ${pool[i].nickName}): ${string.split( ' ').slice(1).join(' ')}`);
       pool[i].socket.write(`(Direct Message from ${client.nickName}): ` + string.split(' ').slice(1).join(' '));
       return;
     }
