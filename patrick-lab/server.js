@@ -1,6 +1,6 @@
 'use strict';
 
-const Client = require('./pages.js');
+const Client = require('.model/pages.js');
 const net = require('net');
 const EE = require('events').EventEmitter;
 const ee = new EE();
