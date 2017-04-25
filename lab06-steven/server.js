@@ -14,19 +14,19 @@ ee.on('default', (client, string) => {
 });
 
 ee.on('/all', (client, string) => {
-  pool.forEach(u => u.socket.write(`${client.nickName}: ${string}`));
+  pool.forEach(u => u.socket.write(`${client.nickName}: ${string}\n`));
 });
 
 
 server.on('connection', (socket) => {
-  let client = new Client;
+  let client = new Client(socket);
   pool.push(client);
-  pool.forEach(u => u.socket.write(`${client.nickName} has connected!`));
+  pool.forEach(c => c.socket.write(`${client.nickName} has connected!\n`));
 
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
     if (command.startsWith('/')) {
-      ee.emit(command, client, data.split(' ').slice(1).join(' '));
+      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
 
