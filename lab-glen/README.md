@@ -10,6 +10,7 @@
 
 ### Commands
 /nick - This changes your nickname. Do this first.
+
 /all - This sends a message to all users.
 
 /dm - This sends a direct message. Example
