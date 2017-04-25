@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
+    "lint": "eslint ../",
     "start": "node server.js"
   },
   "keywords": [
