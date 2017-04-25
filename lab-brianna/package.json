@@ -1,0 +1,32 @@
+{
+  "name": "lab-brianna",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brisourceful/lab-06-tcp-chat.git"
+  },
+  "keywords": [
+    "tcp",
+    "chat",
+    "node"
+  ],
+  "author": "Brianna Burrows",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brisourceful/lab-06-tcp-chat/issues"
+  },
+  "homepage": "https://github.com/brisourceful/lab-06-tcp-chat#readme",
+  "dependencies": {
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "mocha": "^3.3.0"
+  }
+}
