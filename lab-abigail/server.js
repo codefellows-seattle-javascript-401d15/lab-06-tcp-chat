@@ -4,7 +4,7 @@ const Client = require('./model/client.js');
 const net = require('net');
 const EE = require('events').EventEmitter;
 const ee = new EE();
-const server = net.createServer();
+const server = module.exports = net.createServer();
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, function() {
@@ -22,9 +22,12 @@ ee.on('/all', function(client, string) {
 });
 
 ee.on('/nick', function(client, string) {
+  client.original = client.nickName;
   client.nickName = string.trim().split(' ').join('').toUpperCase();
-  client.socket.write(`You changed your nickname to ${client.nickName}\n`);
-  console.log(`${client.userName} changed their nickname to ${client.nickName}`);
+  client.socket.write(`You changed your nickname to from ${client.original} to ${client.nickName}\n`);
+  pool.forEach(pool => {
+    pool.socket.write(`${client.original} changed his/her name to ${client.nickName}\n`);
+  });
 });
 
 ee.on('/dm', function(client, string) {
@@ -46,7 +49,7 @@ server.on('connection', socket => {
 
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
-    console.log(`${client.nickName}: ${data}`);
+    // console.log(`${client.nickName}: ${data}`);
     if(command.startsWith('/')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
