@@ -2,7 +2,7 @@
   "name": "lab-06-tcp-chat",
   "version": "1.0.0",
   "description": "lab6",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "mocha"
   },
@@ -20,5 +20,9 @@
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "mocha": "^3.3.0"
+  },
+  "dependencies": {
+    "node-uuid": "^1.4.8",
+    "nodemon": "^1.11.0"
   }
 }
