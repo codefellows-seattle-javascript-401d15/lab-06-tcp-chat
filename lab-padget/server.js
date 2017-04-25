@@ -17,13 +17,16 @@ ee.on('default', (client, string) => {
 
 // Trigger a broadcast event for everyone.
 ee.on('/all', (client, string) => {
-  pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
+  pool.forEach(user => user.socket.write(`${client.nickName}: ${string}`));
 });
 
-// Allow a user change their nickname.
-// ee.on('/nick', (client, string) => {
-//   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
-// });
+// Allow a user create (change) their nickname.
+ee.on('/nick', (instance, string) => {
+  // Referring to same instance in memory.
+  // instance.nickname = string.split(' ').slice(2).join(' ');
+  let newNickName = `${string}`;
+  instance.nickName = newNickName;
+});
 
 // Allow a user to send a message directly to another user by nick name.
 // ee.on('/dm', (client, string) => {
@@ -49,9 +52,20 @@ server.on('connection', socket => {
     // Shift to drop command off the front. Trim takes off white space.
     let command = data.toString().split(' ').shift().trim();
     // Use event emitter.
-    if(command.startsWith('/')) {
-      // Join it back together on spaces.
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
+    // if(command.startsWith('/')) {
+    //   // Join it back together on spaces.
+    //   ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
+    //   return;
+    // }
+    // also works with command instead of '/all'
+    if(command === '/all') {
+      ee.emit('/all', client, data.toString().split(' ').slice(1).join(' '));
+      return;
+    }
+
+    // doesn't work with command here, must have '/nick'
+    if(command === '/nick') {
+      ee.emit('/nick', client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
 
