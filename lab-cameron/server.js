@@ -17,6 +17,25 @@ ee.on('/all', (client, string) => {
   pool.forEach(ele => ele.socket.write(`${client.nickname}: ${string}`));
 });
 
+ee.on('/nick', function(client, string) {
+  client.id = client.nickname;
+  client.nickname = string.trim().split(' ').join('');
+  client.socket.write(`Set nickname to ${client.nickname}\n`);
+  pool.forEach(ele => ele.socket.write(`${client.id} set nickname as ${client.nickname}\n`));
+});
+
+ee.on('/dm', function(client, string) {
+  let nickname = string.split(' ').shift().trim();
+  let message = string.split(' ').slice(1).join(' ').trim();
+
+  pool.forEach(dm => {
+    if (dm.nickname === nickname) {
+      dm.socket.write(`DM from ${client.nickname}: ${message}\n`);
+    }
+  });
+  client.socket.write(`DM to ${nickname}: ${message}\n`);
+});
+
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
@@ -28,8 +47,14 @@ server.on('connection', socket => {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
-
     ee.emit('default', client, data.toString());
+  });
+  socket.on('error', err => {
+    console.log(`ERROR: ${err}`);
+  });
+  socket.on('close', data => {
+    ee.emit('quit', client, data.toString());
+    pool.forEach(ele => ele.socket.write(`${client.nickname} has logged off.`));
   });
 });
 
