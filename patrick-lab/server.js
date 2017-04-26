@@ -32,8 +32,9 @@ ee.on('/dm', (client, string) => {
 });
 
 ee.on('/close', (client) =>{
-  pool.splice(pool.indexOf(client.socket), 1);
+  pool.splice(pool.indexOf(client), 1);
   pool.forEach(c => c.socket.write(`${client.nickname}: Left Room \n`));
+  console.log('New Pool', pool);
 });
 
 
@@ -44,7 +45,7 @@ server.on('connection', socket => {
   pool.forEach(c => c.socket.write(`${client.userName} has connected! Nickname: ${client.nickname}\n`));
 
   socket.on('data', data => {
-    let command = data.toString().split(' ').shift();
+    let command = data.toString().split(' ').shift().trim();
     if(command.startsWith('/all')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
@@ -57,7 +58,7 @@ server.on('connection', socket => {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
-    else if(command.startsWith('/close')){
+    else if(command.startsWith('/close')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
