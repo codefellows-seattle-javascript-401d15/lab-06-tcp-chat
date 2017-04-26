@@ -4,18 +4,40 @@ const Client = require('./model/client');
 const net = require('net');
 const EE = require('events').EventEmitter;
 const ee = new EE();
-const server = net.createServer();
+const server = module.export = net.createServer();
 const PORT = process.env.PORT || 4000;
 
 const pool = [];
 
+//default error command message
 ee.on('default', (client, string) => {
   client.socket.write(`Not a valid command: ${string.split(' ', 1)}\n`);
 });
 
-ee.on('@all', (client, string) => {
+//sends a message to all users
+ee.on('\\all', (client, string) => {
   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
 });
+
+//allows user to change nickname
+ee.on('\\nick', (client, newNickName) => {
+  client.nickName = newNickName.trim();
+  client.socket.write(`You have changed your nickname to ${client.nickName}\n`);
+});
+
+//allows user to direct message another user by nickname
+ee.on('\\dm', (client, string) => {
+  let toUser = pool.find(u => {
+    return u.nickName === string.split(' ').shift().trim();
+  });
+  let message = string.split(' ').slice(1).join(' ');
+  if (toUser) {
+    client.socket.write(`To ${toUser.nickName}: ${message}`);
+    toUser.socket.write(`From ${client.nickName}: ${message}`);
+    return;
+  }
+});
+
 
 server.on('connection', socket => {
   let client = new Client(socket);
@@ -44,23 +66,6 @@ server.on('connection', socket => {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
-    //
-    // if(command.startsWith('\\all')){
-    //   ee.emit(command, client, data.toString())
-    //   return
-    // }
-    //
-    // if(command.startsWith('\\nick')){
-    //   ee.emit(command, client, data)
-    // }
-    //
-    // if(command.startsWith('\\dm')){
-    //   ee.emit(command, client, data)
-    // }
-    //
-    // if(command.startsWith(`${nickName}`)){
-    //   ee.emit(command, client, data)
-    // }
 
     ee.emit('default', client, data.toString());
   });
