@@ -23,23 +23,71 @@ ee.on('/all', (client, string) => {
 // Allow a user create (change) their nickname.
 ee.on('/nick', (client, string) => {
   // Referring to same instance in memory.
+  // instance.nickname = string.split(' ').slice(2).join(' ');
   let newNickName = `${string}`; // Could use string.
   client.nickName = newNickName.trim(); // Set a new nickname.
   // Feedback to user nickname was set.
   client.socket.write(`${client.nickName}: Sup Hacker?\n`);
+  // if (newNickName) {
+  //   console.log('If nickname is set.');
+  //   // Refer to existing nickname.
+  // } else {
+  //   console.log('If no nickname set.');
+  //   // Make a new nickname.
+  // }
 });
 
 // Allow a user to send a message directly to another user by nick name.
 ee.on('/dm', (client, string) => {
-  let target = string.split(' ')[0]; // target nickname at index zero
+  // for on pool if(i @ the pool)
+  // let target = string.split(' ').shift().trim(); // target nickname
+  // console.log(target);
+  let target = string.split(' ')[0]; // target nickname
+  console.log(target);
   let message = string.split(' ').slice(1).join(' '); // message to send to nickname
-  // Enter "/dm nickname message." Send to a user. Only target sees the message.
+  console.log(message);
+
+  console.log('Pool before: ', pool);
+
   pool.forEach(ctx => {
     if (ctx.nickName === target) {
-      ctx.socket.write(`${client.nickName}: ${message}`);
+      ctx.socket.write(`${client.nickName}: ${message}\n`);
     }
   });
+    //target => target.socket.write(`${client.nickName}: ${string}\n`));
+  // console.log('Pool after: ', pool);
+
+  // for (let i = 0; i < pool.length; i++) {
+  //   // console.log(pool[i].nickname);
+  //   // pool[i].socket.write(message);
+  //
+  //   // Writes to both users
+  //   if (target === 'steven') {
+  //     console.log(pool[i].nickName);
+  //     console.log('Pool in loop: ', pool);
+  //     pool[i].socket.write(message); // string value
+  //   }
+  //
+  //   // if (target === pool[i].nickname) {
+  //   //   console.log(pool[i].nickname);
+  //   //   pool[i].socket.write(message); // string value
+  //   // }
+  // }
+
+  // Enter "/dm nickname message." Send to a user.
+  //client.socket.write(`Entered dm command`);
+
+  // let target = pool.find(t => {
+  //   return t.nickName === string.split(' ').shift().trim();
+  // });
+  // // // Nickname and message
+  // target.socket.write(`${client.nickName}: ${string.split(' ').slice(1).join(' ')}`);
+
+  //client.socket.write(`Direct message: ${client.nickName}: ${string}\n`);
+  //target.socket.write(`Direct message: ${client.nickName}: ${string}\n`);
 });
+
+// When a user types their nickname it should be printed. teapot: Sup Hacker?
 
 // When sockets are connected with the ClientPool they should be given event listeners for data, error, and close events.
 // When a socket emits the close event the socket should be removed from the client pool!
@@ -57,9 +105,14 @@ server.on('connection', socket => {
   socket.on('data', data => {
     // Shift to drop command off the front. Trim takes off white space.
     let command = data.toString().split(' ').shift().trim();
-    // Use event emitter. Also works with command instead of '/all'
+    // Use event emitter.
+    // if(command.startsWith('/')) {
+    //   // Join it back together on spaces.
+    //   ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
+    //   return;
+    // }
+    // also works with command instead of '/all'
     if(command === '/all') {
-      // Join it back together on spaces.
       ee.emit('/all', client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
