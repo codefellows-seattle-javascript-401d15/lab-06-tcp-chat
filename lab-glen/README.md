@@ -9,7 +9,7 @@
 
 
 ### Commands
-/nick - This changes your nickname. Do this first.
+/nick - This changes your nickname. 
 
 /all - This sends a message to all users.
 
