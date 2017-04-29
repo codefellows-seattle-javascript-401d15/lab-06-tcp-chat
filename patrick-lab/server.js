@@ -31,12 +31,6 @@ ee.on('/dm', (client, string) => {
   });
 });
 
-ee.on('/close', (client) =>{
-  pool.splice(pool.indexOf(client), 1);
-  pool.forEach(c => c.socket.write(`${client.nickname}: Left Room \n`));
-  console.log('New Pool', pool);
-});
-
 
 server.on('connection', socket => {
   let client = new Client(socket);
@@ -58,17 +52,22 @@ server.on('connection', socket => {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
-    else if(command.startsWith('/close')) {
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-      return;
-    }
-
+    
     ee.emit('default', client, data.toString());
+  });
+
+  socket.on('close', function(){
+    pool.forEach(c => c.socket.write(`${client.nickname}: Left Room \n`));
+    removeSocket(socket);
   });
 
   socket.on('error', err => {
     console.log(err);
   });
 });
+
+function removeSocket(socket){
+  pool.splice(pool.indexOf(socket), 1);
+}
 
 server.listen(PORT, () => console.log(`Listening on: ${PORT}`));
