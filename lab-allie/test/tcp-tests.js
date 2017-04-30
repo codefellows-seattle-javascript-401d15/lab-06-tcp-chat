@@ -1,12 +1,8 @@
 'use strict';
 
 const expect = require('chai').expect;
-const serverJS = require('server.js');
 const net = require('net');
-const EE = require('events').EventEmitter;
-const ee = new EE();
 const server = net.createServer();
-const PORT = process.env.PORT || 3000;
 
 describe('server.js', function() {
   before(done => {
@@ -26,27 +22,28 @@ describe('server.js', function() {
     });
   });
   
-  describe('error message on invalid command', function() {
-    it('should tell the user the command was invalid and ask the user to try again', done => {
-      
-      done();
-    });
-  });
-  
   describe('/nick command', function() {
     it('should allow the user to change their nickname', done => {
+      let newUser = net.connect({port: 3000}, () => {
+        newUser.write('/nick allie');
+      });
       
+      newUser.on('data', (data) => {
+        expect(data.toString()).to.include('allie');
+      });
+      
+      newUser.end();
       done();
     });
   });
   
-  describe('/dm command', function() {
-    it('should allow the user to directly message another user', done => {
-      
-      
-      done();
-    });
-  });
+  // describe('/dm command', function() {
+  //   it('should allow the user to directly message another user', done => {
+  //     
+  //     
+  //     done();
+  //   });
+  // });
   
   after(done => {
     server.close();
