@@ -1,0 +1,27 @@
+{
+  "name": "lab-06-lindsay",
+  "version": "1.0.0",
+  "description": "lab-06-tcp-chat-lindsay",
+  "main": "server.js",
+  "dependencies": {
+    "node-uuid": "^1.4.8",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lindsgil/lab-06-tcp-chat.git"
+  },
+  "keywords": [
+    "lab-06-lindsay"
+  ],
+  "author": "lindsay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lindsgil/lab-06-tcp-chat/issues"
+  },
+  "homepage": "https://github.com/lindsgil/lab-06-tcp-chat#readme"
+}
