@@ -20,11 +20,6 @@ ee.on('/nick', (client, string) => {
   client.nickName = string.trim();
 });
 
-ee.on('/close', client => {
-  pool.forEach(c => c.socket.write(`${client.userName} has peaced out!\n`));
-  pool.splice(pool.indexOf(client.socket), 1);
-});
-
 ee.on('/dm', (client, string) => {
   let target = string.split(' ')[0];
   let message = string.split(' ').slice(1).join(' ');
@@ -51,22 +46,26 @@ server.on('connection', socket => {
       pool.forEach(c => c.socket.write(`${client.userName} has changed their name to ${client.nickName}\n`));
       return;
     }
-    if(command.startsWith('/close')){
-      ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-      return;
-    }
 
     if(command.startsWith('/dm')){
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' ').trim());
       return;
     }
-
-    socket.on('error', err => {
-      console.log(err);
-    });
-
     ee.emit('default', client, data.toString());
   });
+
+  socket.on('close', function () {
+    pool.forEach(c => c.socket.write(`${client.userName} has peaced out!\n`));
+    removeSocket(socket);
+  });
+
+  socket.on('error', err => {
+    console.log(err);
+  });
 });
+
+function removeSocket (socket) {
+  pool.splice(pool.indexOf(socket), 1);
+}
 
 server.listen(PORT, () => console.log(`Listening on: ${PORT}`));
