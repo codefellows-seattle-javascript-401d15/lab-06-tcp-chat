@@ -1,0 +1,21 @@
+{
+  "name": "01-tcp-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js",
+    "lint": "eslint ./"
+  },
+  "keywords": [],
+  "author": "Chris",
+  "license": "MIT",
+  "dependencies": {
+    "node-uuid": "^1.4.8"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
