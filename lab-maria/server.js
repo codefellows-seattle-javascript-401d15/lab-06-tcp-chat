@@ -33,7 +33,7 @@ ee.on('@dm', (client, string) => {
     client.socket.write(`GOD: ${string.split(' ').shift().trim()} is in a better place`);
   }
 });
-ee.on('@channel', (client) => {
+ee.on('@channel', (client, string) => {
   pool.forEach(c => {
     client.socket.write(c.nickName);
   });
