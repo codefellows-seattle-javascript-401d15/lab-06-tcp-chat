@@ -3,7 +3,7 @@
 
 const expect = require('chai').expect;
 const net = require('net');
-const server = ('../server.js');
+const server = net.createServer();
 
 describe('Server instance', function() {
   before('Listening on Port 3000', function(done) {
