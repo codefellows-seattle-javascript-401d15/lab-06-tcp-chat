@@ -8,8 +8,7 @@
   "scripts": {
     "test": "mocha",
     "start": "node server.js",
-    "watch": "nodemon server.js",
-    "lint": ""
+    "watch": "nodemon server.js"
   },
   "author": "maria reed",
   "license": "MIT",
@@ -19,5 +18,5 @@
   "devDependencies": {
      "chai": "^3.5.0",
      "mocha": "^3.3.0"
-   },
+   }
 }
