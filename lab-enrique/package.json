@@ -1,0 +1,15 @@
+{
+  "name": "lab-enrique",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^3.0.1"
+  }
+}
