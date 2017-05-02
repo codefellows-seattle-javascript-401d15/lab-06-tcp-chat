@@ -1,5 +1,7 @@
 'use-strict';
 
+module.exports = {};
+
 const Client = require('./model/client');
 const net = require('net');
 const EE = require('events').EventEmitter;
@@ -7,7 +9,7 @@ const ee = new EE();
 const server = module.exports = net.createServer();
 const PORT = process.env.PORT || 3000;
 
-const pool = [];
+module.exports.pool = [];
 
 // Default event that fires when all other events fail.
 ee.on('default', (client, string) => {
@@ -21,12 +23,12 @@ ee.on('%!welcome', client =>{
 
 // Lets a user send a message to the room.
 ee.on('/all', (client, string) => {
-  pool.forEach(c => c.socket.write(`${client.nickName}: ${string}\n`));
+  module.exports.pool.forEach(c => c.socket.write(`${client.nickName}: ${string}\n`));
 
 });
 
 //Sets the user's nickname and changes their setName to true allowing them to DM and be DMd.
-ee.on('/n', (client, string) => {
+ee.on('/nick', (client, string) => {
   let newName = string.split(' ').shift().trim();
   let successFlag = true;
 
@@ -34,7 +36,7 @@ ee.on('/n', (client, string) => {
     client.socket.write('Sorry, you must enter a character!\n');
     return;
   }
-  pool.forEach(c =>{
+  module.exports.pool.forEach(c =>{
     if(c.nickName.toLowerCase() === newName.toLowerCase()){
       client.socket.write(`Sorry, that name is taken! You can add numbers to the name if you like!\n`);
       successFlag = false;
@@ -45,7 +47,7 @@ ee.on('/n', (client, string) => {
     let oldName = client.nickName;
     client.nickName = newName;
     client.setName = true;
-    pool.forEach(c => c.socket.write(`${oldName} has changed their name to ${client.nickName}\n`));
+    module.exports.pool.forEach(c => c.socket.write(`${oldName} has changed their name to ${client.nickName}\n`));
   }
 });
 
@@ -69,7 +71,7 @@ ee.on('/dm', (client, string) =>{
 
   // Checks if the selected user is a real user.
   let foundUserFlag = false;
-  pool.forEach(c =>{
+  module.exports.pool.forEach(c =>{
     if(selectedUser === c.nickName.toLowerCase()){
       selectedUser = c;
       foundUserFlag = true;
@@ -98,7 +100,7 @@ ee.on('/room', client =>{
   let currentClient;
 
 // Finds the user and waits to push them to the end of the list.
-  pool.forEach(c =>{
+  module.exports.pool.forEach(c =>{
     if(client.userName === c.userName){
       currentClient = (` You: ${c.nickName}`);
     }else{
@@ -114,10 +116,10 @@ ee.on('/help', client =>{
   client.socket.write(`\m\m-------------------\n\n Quick Commands:\n /all\n /room\n /nick\n /dm\n /exit\n\n All commands begin with a forward-slash ( / ). Example: /all \n\n Some commands require the command followed by a single word. If you see a command that has a following word wrapped like *this* that means whatever you type after the command will be used by that command.\n\nList of commands:\n\n /nick *name* - This allows you to change your name.\n\n /all - Lets you send a message to the room.\n\n /room - This lets you see all current users in the room.\n\n /dm *username* <message> - Allows you to send a private message to a user. You must both have a user name set! \n\n /help shows a list of all commands\n\n /exit This lets you leave the chatroom\n\n------------------------\n\n\n`);
 });
 
-// Dev helper to show current names in pool.
+// Dev helper to show current names in module.exports.pool.
 // ee.on('/p', client =>{
 //   let tempPool = [];
-//   pool.forEach(c =>{
+//   module.exports.pool.forEach(c =>{
 //     tempPool.push(c.nickName);
 //   });
 //   console.log(tempPool);
@@ -127,8 +129,8 @@ ee.on('/help', client =>{
 // When the server receives a connection Event it makes a new socket with our client constriction bound to it. The socket.on is attached to the server and when it gets a data event it handles that event by parsing out the first word and then emitting the event that matches that word. It also passes the client
 server.on('connection', socket => {
   let client = new Client(socket);
-  pool.push(client);
-  pool.forEach(c => c.socket.write(`${client.nickName} has connected!\n`));
+  module.exports.pool.push(client);
+  module.exports.pool.forEach(c => c.socket.write(`${client.nickName} has connected!\n`));
 
   ee.emit('%!welcome', client);
   ee.emit('/room', client);
@@ -136,7 +138,7 @@ server.on('connection', socket => {
   // Listener for any data that a socket sends.
   socket.on('data', data =>{
     let command = data.toString().split(' ').shift().trim();
-    console.log(`${client.nickName}'s command: ${command}'`);
+    // console.log(`${client.nickName}'s command: ${command}'`);
 
     if(command.startsWith('/')){
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
@@ -148,18 +150,18 @@ server.on('connection', socket => {
 
   // When a user types exit it will end that socket. This handles that.
   socket.on('end', () => {
-    console.log(`${client.nickName} ended their connection.`);
+    // console.log(`${client.nickName} ended their connection.`);
   });
 
   // When a user types /exit or closes the socket this handles that event.
   socket.on('close', () =>{
     let name = client.nickName;
 
-    // Removes the client from the pool.
-    pool.splice(pool.indexOf(client),1);
+    // Removes the client from the module.exports.pool.
+    module.exports.pool.splice(module.exports.pool.indexOf(client),1);
 
     // Lets the room know who left.
-    pool.forEach(c => {
+    module.exports.pool.forEach(c => {
       c.socket.write(`${name} has left the room.\n`);
     });
   });
