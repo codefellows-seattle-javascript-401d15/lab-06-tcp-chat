@@ -1,0 +1,24 @@
+{
+  "name": "lab-miketreat",
+  "version": "1.0.0",
+  "description": "tcp chat lab for codefellows",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "tcp",
+    "socket",
+    "client",
+    "chat"
+  ],
+  "author": "Mike Treat",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
