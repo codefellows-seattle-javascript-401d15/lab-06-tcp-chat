@@ -2,7 +2,7 @@
   "name": "lab-miketreat",
   "version": "1.0.0",
   "description": "tcp chat lab for codefellows",
-  "main": "index.js",
+  "main": "server.js",
   "directories": {
     "test": "test"
   },
