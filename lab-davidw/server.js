@@ -7,7 +7,7 @@ const ee = new EE();
 
 const server = module.exports = net.createServer();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 const pool = [];
 
@@ -33,12 +33,10 @@ server.on('connection', socket => {
     ee.emit('default', client, data.toString());
   });
 
-  //When a socket emits the error event log on server
   socket.on('error', err => {
     console.error(err);
   });
 
-  //When a socket emits the close event
   socket.on('close', () => {
     for (let i = 0; i < pool.length; i++) {
       if(pool[i] === client) {
@@ -61,7 +59,6 @@ ee.on('/nick', (client, string) => {
   client.nickName = string.trim();
 });
 
-//sends direct message to another user if they exist
 ee.on('/dm', (client, string) => {
   for (var i = 0; i < pool.length; i++) {
     if (string.split(' ')[0] === pool[i].nickName) {

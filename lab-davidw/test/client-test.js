@@ -1,11 +1,11 @@
 'use strict';
 
 const expect = require('chai').expect;
-const testClient = require('../model/client.js');
+const TestClient = require('../model/client.js');
 
 describe('client test', () => {
   before('Create Client Object', () => {
-    this.client = new testClient();
+    this.client = new TestClient();
   });
   it('should return an object', done => {
     expect(this.client).to.be.an.instanceof(Object);

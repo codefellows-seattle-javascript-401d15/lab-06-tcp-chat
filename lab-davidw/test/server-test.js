@@ -2,15 +2,15 @@
 
 const expect = require('chai').expect;
 const testServer = require('../server.js');
-const testClient = require('../model/client.js');
+const TestClient = require('../model/client.js');
 const net = require('net');
 const Client = require('../model/client');
 
 describe('server tests', function() {
-  //hooks
+
   before(done => {
     testServer.listen(3000);
-    this.client = new testClient();
+    this.client = new TestClient();
     done();
   });
   after(done => {
