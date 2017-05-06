@@ -1,14 +1,14 @@
 'use strict';
 
-//const server = require('../index');
+const Client = require('../lib/client');
+const server = require('../index.js');
 const expect = require('chai').expect;
 const net = require('net');
 
-//const Client = require('./lib/client');
-const EE = require('events').EventEmitter;
-const ee = new EE();
-const server = net.createServer();
-const PORT = process.env.PORT || 3000;
+//const EE = require('events').EventEmitter;
+//const ee = new EE();
+//const server = net.createServer();
+//const PORT = process.env.PORT || 3000;
 
 describe('Server instance', function() {
   before(done => {
@@ -55,17 +55,33 @@ describe('Server instance', function() {
       });
     });
   });
-  //
-  // describe('/nick command', function() {
-  //   it('should change the client nickname', done => {
-  //
-  //     done()
-  //   })
-  // })
-  //
-  // describe('/dm command', function() {
-  //   it('should direct message a specific user', done => {
-  //
-  //     done()
-  //   });
+
+  describe('/nick command', function() {
+    let client = new Client();
+    client.nickName = 'Carlo';
+
+    it('Should change the client nickName to Carlo', done => {
+      expect(client.nickName).to.equal('Carlo');
+      done();
+    });
+    it('Should not say the clients nickName is BuzzKillington', done => {
+      expect(client.nickName).to.not.equal('BuzzKillington');
+      done();
+    });
+  });
+
+  describe('/dm command', function() {
+
+    it('should direct message a specific user by nickname', done => {
+      let client = new Client();
+      client.nickName = 'Carlo';
+      let client2 = net.connect({port: 3000}, function() {
+        client2.write('/dm Carlo hi');
+        client2.on('data', data => {
+          expect(data.toString().to.include('Carlo hi'));
+        });
+        done();
+      });
+    });
+  });
 });
