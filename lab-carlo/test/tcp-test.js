@@ -5,11 +5,6 @@ const server = require('../index.js');
 const expect = require('chai').expect;
 const net = require('net');
 
-//const EE = require('events').EventEmitter;
-//const ee = new EE();
-//const server = net.createServer();
-//const PORT = process.env.PORT || 3000;
-
 describe('Server instance', function() {
   before(done => {
     server.listen(3000);
