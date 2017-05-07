@@ -1,6 +1,6 @@
 {
   "name": "lab-padget",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Lab 6",
   "main": "server.js",
   "scripts": {
