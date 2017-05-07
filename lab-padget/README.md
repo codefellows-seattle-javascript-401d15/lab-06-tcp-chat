@@ -14,6 +14,7 @@ In [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) (Terminal) enter the 
 ```server
 nodemon server.js
 ```
+Enter `control c` to disconnect from the server.
 
 ## Connect with a client
 In a new Terminal window enter the command:
@@ -23,10 +24,13 @@ telnet localhost 3000
 ```
 Open another window in Terminal and repeat the telnet command above to connect another client.
 
+Enter `control ]` then `control c` to exit telnet.
+
 ## Send Commands
 In Terminal on the client:
 
-* Enter `/all` to trigger a broadcast event.
+* Enter `/all` to see who is in the chat room.
+* Enter `/all type-your-message-here` to trigger a broadcast event.
 * Enter `/nick new-nick-name-goes-here` to change your user nickname.
 * Enter `/dm` to send a message directly to another user by nick name.
 * Enter `/nick` to print your current nickname.
