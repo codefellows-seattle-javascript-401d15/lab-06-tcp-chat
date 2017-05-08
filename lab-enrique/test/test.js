@@ -1,9 +1,9 @@
 'use strict';
 
- const Client = require('../model/client');
- const server = require('../server.js');
- const expect = require('chai').expect;
- const net = require('net');
+const Client = require('../model/client');
+const server = require('../server.js');
+const expect = require('chai').expect;
+const net = require('net');
 
 describe('Server instance', function() {
   before(done => {
