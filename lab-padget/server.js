@@ -1,11 +1,15 @@
 'use strict';
 
-const Client = require('./model/client'); // Import client.
+// Import client.
+const Client = require('./model/client');
 const net = require('net');
 const EE = require('events').EventEmitter;
-const ee = new EE(); // Define and fire event for our chat.
-const server = net.createServer(); // Create a server instance and assign it to server.
-const PORT = process.env.PORT || 3000; // Variables that live on your machine.
+// Define and fire event for our chat.
+const ee = new EE();
+// Create a server instance and assign it to server.
+const server = module.exports = net.createServer();
+// Variables that live on your machine.
+const PORT = process.env.PORT || 3000;
 
 const pool = [];
 
@@ -20,79 +24,32 @@ ee.on('/all', (client, string) => {
   pool.forEach(user => user.socket.write(`${client.nickName}: ${string}\n`));
 });
 
-// Allow a user create (change) their nickname.
+// Allow a user create or change their nickname.
 ee.on('/nick', (client, string) => {
-  // Referring to same instance in memory.
-  // instance.nickname = string.split(' ').slice(2).join(' ');
-  let newNickName = `${string}`; // Could use string.
-  client.nickName = newNickName.trim(); // Set a new nickname.
+  client.socket.write(`${client.nickName}\n`);
+  // Referring to the same instance in memory.
+  let newNickName = `${string}`;
+  // Set a new nickname.
+  client.nickName = newNickName.trim();
   // Feedback to user nickname was set.
   client.socket.write(`${client.nickName}: Sup Hacker?\n`);
-  // if (newNickName) {
-  //   console.log('If nickname is set.');
-  //   // Refer to existing nickname.
-  // } else {
-  //   console.log('If no nickname set.');
-  //   // Make a new nickname.
-  // }
 });
 
 // Allow a user to send a message directly to another user by nick name.
 ee.on('/dm', (client, string) => {
-  // for on pool if(i @ the pool)
-  // let target = string.split(' ').shift().trim(); // target nickname
-  // console.log(target);
-  let target = string.split(' ')[0]; // target nickname
-  console.log(target);
-  let message = string.split(' ').slice(1).join(' '); // message to send to nickname
-  console.log(message);
 
-  console.log('Pool before: ', pool);
+  // target nickname
+  let target = string.split(' ')[0];
+
+  // message to send to nickname
+  let message = string.split(' ').slice(1).join(' ');
 
   pool.forEach(ctx => {
     if (ctx.nickName === target) {
       ctx.socket.write(`${client.nickName}: ${message}\n`);
     }
   });
-    //target => target.socket.write(`${client.nickName}: ${string}\n`));
-  // console.log('Pool after: ', pool);
-
-  // for (let i = 0; i < pool.length; i++) {
-  //   // console.log(pool[i].nickname);
-  //   // pool[i].socket.write(message);
-  //
-  //   // Writes to both users
-  //   if (target === 'steven') {
-  //     console.log(pool[i].nickName);
-  //     console.log('Pool in loop: ', pool);
-  //     pool[i].socket.write(message); // string value
-  //   }
-  //
-  //   // if (target === pool[i].nickname) {
-  //   //   console.log(pool[i].nickname);
-  //   //   pool[i].socket.write(message); // string value
-  //   // }
-  // }
-
-  // Enter "/dm nickname message." Send to a user.
-  //client.socket.write(`Entered dm command`);
-
-  // let target = pool.find(t => {
-  //   return t.nickName === string.split(' ').shift().trim();
-  // });
-  // // // Nickname and message
-  // target.socket.write(`${client.nickName}: ${string.split(' ').slice(1).join(' ')}`);
-
-  //client.socket.write(`Direct message: ${client.nickName}: ${string}\n`);
-  //target.socket.write(`Direct message: ${client.nickName}: ${string}\n`);
 });
-
-// When a user types their nickname it should be printed. teapot: Sup Hacker?
-
-// When sockets are connected with the ClientPool they should be given event listeners for data, error, and close events.
-// When a socket emits the close event the socket should be removed from the client pool!
-// When a socket emits the error event the error should be logged on the server
-// When a socket emits the data event the data should be logged on the server and the \wack commands below should be implemented
 
 server.on('connection', socket => {
   // Client code.
@@ -105,19 +62,16 @@ server.on('connection', socket => {
   socket.on('data', data => {
     // Shift to drop command off the front. Trim takes off white space.
     let command = data.toString().split(' ').shift().trim();
-    // Use event emitter.
-    // if(command.startsWith('/')) {
-    //   // Join it back together on spaces.
-    //   ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
-    //   return;
-    // }
-    // also works with command instead of '/all'
+
+    // ee.on('data', data => {
+    //   console.log('log data event from socket: ', data);
+    // });
+
     if(command === '/all') {
       ee.emit('/all', client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
 
-    // doesn't work with command here, must have '/nick'
     if(command === '/nick') {
       ee.emit('/nick', client, data.toString().split(' ').slice(1).join(' '));
       return;
@@ -130,7 +84,68 @@ server.on('connection', socket => {
 
     ee.emit('default', client, data.toString());
   });
+
+  // socket.on('custom', () => {
+  //   ee.emit('error', () => {
+  //     console.log('there was an error event ');
+  //     console.error('logged error on server');
+  //   });
+  //
+  //   ee.emit('close', () => {
+  //     console.log('there was a close event ');
+  //   });
+  //
+  //   ee.emit('end', () => {
+  //     console.log('on close, remove socket from client pool ');
+  //   });
+  // });
+
+  socket.on('end', () => {
+    console.log(client.userName, 'disconnected from server');
+  });
+
+  // socket.on('end', () => {
+  //   console.log(client.userName);
+  // });
 });
 
 
+/*
+server.on('error', (err) => {
+  // try, catch?
+  throw err;
+});
+
+
+When client disconnects, the server throws this error:
+
+Listening on: 3000
+21d3b379-51ec-43f3-b58d-c2f83cfcb59a disconnected from server
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+Error: This socket has been ended by the other party
+    at Socket.writeAfterFIN [as write] (net.js:294:12)
+    at pool.forEach.c (/Users/michaelpadget/CodeFellows/401/labs/lab-06-tcp-chat/lab-padget/server.js:58:30)
+    at Array.forEach (native)
+    at Server.server.on.socket (/Users/michaelpadget/CodeFellows/401/labs/lab-06-tcp-chat/lab-padget/server.js:58:8)
+    at emitOne (events.js:96:13)
+    at Server.emit (events.js:188:7)
+    at TCP.onconnection (net.js:1468:8)
+
+Most likely because there are no longer any clients in the pool.
+*/
+
 server.listen(PORT, () => console.log(`Listening on: ${PORT}`));
+
+/*
+server.listen(3000, () => {
+  console.log('server bound');
+});
+
+To listen on the socket /tmp/echo.sock the third line from the last would just be changed to
+
+server.listen('/tmp/echo.sock', () => {
+  console.log('server bound');
+});
+*/
