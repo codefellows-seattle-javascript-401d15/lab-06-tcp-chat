@@ -73,11 +73,18 @@ npm run test
 ```
 
 ## Resources
-* [OSI Model](https://en.wikipedia.org/wiki/OSI_model)
-* [TCP Connection Walkthrough](https://www.youtube.com/watch?v=F27PLin3TV0)
-* [Stream Handbook](https://github.com/substack/stream-handbook)
+
 * [Node Stream](https://nodejs.org/docs/latest/api/stream.html)
-* [Math.random](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
+* [Node Events](https://nodejs.org/api/events.html)
+* [Node Http](https://nodejs.org/api/http.html)
+* [Node Net](https://nodejs.org/docs/latest/api/net.html)
+* [Node Assert](https://nodejs.org/api/assert.html)
+* [Chai Expect](http://chaijs.com/api/bdd/)
+* [Chai Assertion Styles](http://chaijs.com/guide/styles/#expect)
+* [Stream Handbook](https://github.com/substack/stream-handbook)
+* [MDN Math.random](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
+* [Wikipedia OSI Model](https://en.wikipedia.org/wiki/OSI_model)
+* [YouTube TCP Connection](https://www.youtube.com/watch?v=F27PLin3TV0)
 
 ## License
 
