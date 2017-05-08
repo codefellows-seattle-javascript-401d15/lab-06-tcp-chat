@@ -77,6 +77,7 @@ npm run test
 * [TCP Connection Walkthrough](https://www.youtube.com/watch?v=F27PLin3TV0)
 * [Stream Handbook](https://github.com/substack/stream-handbook)
 * [Node Stream](https://nodejs.org/docs/latest/api/stream.html)
+* [Math.random](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
 
 ## License
 

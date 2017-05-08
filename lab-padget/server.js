@@ -13,9 +13,10 @@ const PORT = process.env.PORT || 3000;
 
 const pool = [];
 
+// The eventEmitter.on() method is used to register listeners, while the eventEmitter.emit() method is used to trigger the event.
+
 // Define event emitter.
 ee.on('default', (client, string) => {
-  // Feedback: not a valid command. Do something else.
   client.socket.write(`Not a valid command: ${string.split(' ', 1)}\n`);
 });
 
@@ -32,21 +33,19 @@ ee.on('/nick', (client, string) => {
   // Set a new nickname.
   client.nickName = newNickName.trim();
   // Feedback to user nickname was set.
-  client.socket.write(`${client.nickName}: Sup Hacker?\n`);
+  client.socket.write(`${client.nickName}: Hey you!\n`);
 });
 
 // Allow a user to send a message directly to another user by nick name.
 ee.on('/dm', (client, string) => {
-
   // target nickname
   let target = string.split(' ')[0];
-
   // message to send to nickname
   let message = string.split(' ').slice(1).join(' ');
 
-  pool.forEach(ctx => {
-    if (ctx.nickName === target) {
-      ctx.socket.write(`${client.nickName}: ${message}\n`);
+  pool.forEach(msg => {
+    if (msg.nickName === target) {
+      msg.socket.write(`${client.nickName}: ${message}\n`);
     }
   });
 });
@@ -56,96 +55,81 @@ server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
   // Tell chat room someone has arrived.
-  pool.forEach(c => c.socket.write(`${client.userName} has connected!\n`));
+  pool.forEach(c => c.socket.write(`${client.nickName} has connected!\n`));
 
-  // Whenever data starts to stream to sockets, do some stuff.
+  // event listeners for data, error, and close events
   socket.on('data', data => {
     // Shift to drop command off the front. Trim takes off white space.
     let command = data.toString().split(' ').shift().trim();
 
-    // ee.on('data', data => {
-    //   console.log('log data event from socket: ', data);
-    // });
-
     if(command === '/all') {
+      // log data on the server when a socket emits an event.
+      console.log(`${client.nickName} broadcasted an event to everyone\n`);
       ee.emit('/all', client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
 
     if(command === '/nick') {
+      console.log(`${client.userName} changed their nickname\n`);
       ee.emit('/nick', client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
 
     if(command === '/dm') {
+      console.log(`${client.nickName} sent a direct message\n`);
       ee.emit('/dm', client, data.toString().split(' ').slice(1).join(' '));
+      return;
+    }
+
+    if(command === '/who') {
+      console.log(`${client.nickName} asked to see all users\n`);
+      ee.emit('/who', client, console.log(server.listeners('connection')));
+      return;
+    }
+
+    if(command === '/error') {
+      console.error('whoops! there was an error');
+      ee.emit('error', new Error('whoops!'));
+      return;
+    }
+
+    if(command === '/exit') {
+      ee.emit('close', () => {
+        console.log('there was a close event');
+        console.log('on close, remove socket from client pool');
+        ee.removeListener('connection', socket);
+      });
       return;
     }
 
     ee.emit('default', client, data.toString());
   });
 
-  // socket.on('custom', () => {
-  //   ee.emit('error', () => {
-  //     console.log('there was an error event ');
-  //     console.error('logged error on server');
-  //   });
-  //
-  //   ee.emit('close', () => {
-  //     console.log('there was a close event ');
-  //   });
-  //
-  //   ee.emit('end', () => {
-  //     console.log('on close, remove socket from client pool ');
-  //   });
-  // });
-
-  socket.on('end', () => {
-    console.log(client.userName, 'disconnected from server');
+  server.removeListener('connection', socket => {
+    console.log('there was a close event');
+    ee.emit(pool.pop(socket));
   });
 
-  // socket.on('end', () => {
-  //   console.log(client.userName);
-  // });
+  // register event listener for error event.
+  socket.on('error', () => {
+    console.log('an error event was registered');
+    ee.emit('error', () => {
+      console.log('there was an error event');
+      console.error('logged error on server');
+    });
+  });
+
+  // register event listener for close event.
+  socket.on('close', () => {
+    console.log(client.userName, 'disconnected from server');
+    // remove from the client pool.
+    ee.emit('close', (socket) => {
+      console.log('there was a close event');
+      console.log('on close, remove socket from client pool');
+      ee.removeListener('connection', socket);
+    });
+  });
+
 });
-
-
-/*
-server.on('error', (err) => {
-  // try, catch?
-  throw err;
-});
-
-
-When client disconnects, the server throws this error:
-
-Listening on: 3000
-21d3b379-51ec-43f3-b58d-c2f83cfcb59a disconnected from server
-events.js:160
-      throw er; // Unhandled 'error' event
-      ^
-Error: This socket has been ended by the other party
-    at Socket.writeAfterFIN [as write] (net.js:294:12)
-    at pool.forEach.c (/Users/michaelpadget/CodeFellows/401/labs/lab-06-tcp-chat/lab-padget/server.js:58:30)
-    at Array.forEach (native)
-    at Server.server.on.socket (/Users/michaelpadget/CodeFellows/401/labs/lab-06-tcp-chat/lab-padget/server.js:58:8)
-    at emitOne (events.js:96:13)
-    at Server.emit (events.js:188:7)
-    at TCP.onconnection (net.js:1468:8)
-
-Most likely because there are no longer any clients in the pool.
-*/
 
 server.listen(PORT, () => console.log(`Listening on: ${PORT}`));
-
-/*
-server.listen(3000, () => {
-  console.log('server bound');
-});
-
-To listen on the socket /tmp/echo.sock the third line from the last would just be changed to
-
-server.listen('/tmp/echo.sock', () => {
-  console.log('server bound');
-});
-*/
