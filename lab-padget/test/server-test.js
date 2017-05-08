@@ -1,32 +1,102 @@
 'use strict';
 
-// npm run test
-console.log('Evaluating server.js');
-
+const server = require('../server');
 const expect = require('chai').expect;
-console.log(expect);
-// const assert = require('assert');
-// const reqContext = require('../lib/server.js');
+const net = require('net');
 
-// Test \nick actually changes a clients nickname
-describe('fs module', function() {
-  describe('#ee.on', function() {
-    it('Should return a string with ', done => {
-      console.log(done);
-      // fs.readFile(`${__dirname}/../data/one.txt`, function(err, data) {
-      //   expect(data.toString()).to.be.a('string');
-      //   done();
-      // });
-    });
-    // it('should return a string', function() {
-    //   assert.equal(instance.name, 'Text');
-    // });
-    // it('should return a string', function() {
-    //   assert.equal(typeof instance.name, 'string');
-    // });
+// test that server started.
+describe('Server instance', function() {
+  before(done => {
+    server.listen(3000);
+    done();
+  });
+
+  after(done => {
+    server.close();
+    done();
   });
 });
 
-// Allow a user change their nickname.
-// ee.on('/nick', (client, string) => {
-// pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`))
+describe('new client joins chat', function() {
+  it('should notify other users that a new user has joined', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include('has connected!');
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('client leaves the chat', function() {
+  it('should notify other users that a user has left the chat', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include(client.userName, 'disconnected from server');
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('bad whack command', function() {
+  it('should respond with an invalid command statement', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include('Not a valid command:');
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('/all command', function() {
+  it('should message all clients', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include(`${client.nickName}`);
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('/nick command', function() {
+  it('should change the client nickname', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include(`${client.nickName}: Hey you!`);
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('/dm command', function() {
+  it('should send text to a user', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.be.a('string');
+      });
+      client.end();
+      done();
+    });
+  });
+});
+
+describe('/dm command', function() {
+  it('should direct message a specific user', done => {
+    let client = net.connect({port: 3000}, () => {
+      client.once('data', function(data) {
+        expect(data.toString()).to.include(`${client.nickName}:`);
+      });
+      client.end();
+      done();
+    });
+  });
+});
