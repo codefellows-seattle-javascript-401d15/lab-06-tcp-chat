@@ -81,27 +81,6 @@ server.on('connection', socket => {
       return;
     }
 
-    if(command === '/who') {
-      console.log(`${client.nickName} asked to see all users\n`);
-      ee.emit('/who', client, console.log(server.listeners('connection')));
-      return;
-    }
-
-    if(command === '/error') {
-      console.error('whoops! there was an error');
-      ee.emit('error', new Error('whoops!'));
-      return;
-    }
-
-    if(command === '/exit') {
-      ee.emit('close', () => {
-        console.log('there was a close event');
-        console.log('on close, remove socket from client pool');
-        ee.removeListener('connection', socket);
-      });
-      return;
-    }
-
     ee.emit('default', client, data.toString());
   });
 
