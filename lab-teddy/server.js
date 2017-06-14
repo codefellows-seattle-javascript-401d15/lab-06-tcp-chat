@@ -24,7 +24,7 @@ server.on('connection', socket => {
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
     if(command.startsWith('/')) {
-      console.log('I am here');
+      console.log('I am here', pool[1]);
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
