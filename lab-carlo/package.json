@@ -1,0 +1,22 @@
+{
+  "name": "lab-carlo",
+  "version": "1.0.0",
+  "description": "class 6 lab",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Carlo",
+  "license": "MIT",
+  "dependencies": {
+    "node-uuid": "^1.4.8",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
