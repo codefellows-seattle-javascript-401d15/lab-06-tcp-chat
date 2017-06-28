@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').Expect;
+const expect = require('chai').expect;
 const testClient = require('../model/client.js');
 
 describe('client test', () => {
@@ -20,7 +20,7 @@ describe('client test', () => {
     done();
   });
   it('should contain a socket', done => {
-    this.client.socket = 8080;
+    this.client.socket = 3000;
     expect(this.client.socket).to.equal(3000);
     done();
   });

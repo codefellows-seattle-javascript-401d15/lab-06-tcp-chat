@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const pool = [];
 
 ee.on('default', (client, string) => {
-  client.socket.write(`Not a valid command: ${string.split(' ', 1)}\n`);
+  client.socket.write(`Not a valid command: ${string.split(' ', 1)}`);
 });
 
 ee.on('/all', (client, string) => {
@@ -19,12 +19,11 @@ ee.on('/all', (client, string) => {
 server.on('connection', socket => {
   let client = new Client(socket);
   pool.push(client);
-  pool.forEach(c => c.socket.write(`${client.userName} has connected!\n`));
+  pool.forEach(c => c.socket.write(`${client.userName} has connected!`));
 
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
     if(command.startsWith('/')) {
-      console.log('I am here', pool[1]);
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
@@ -34,7 +33,7 @@ server.on('connection', socket => {
 });
 ee.on('/nick', (client, newNick) => {
   client.nickName = newNick.trim();
-  client.socket.write(`Nickname has changed to ${client.nickName}\n`);
+  client.socket.write(`Nickname has changed to ${client.nickName}`);
 });
 ee.on('/dm', (client, string) => {
   let targetUser = pool.find(target => {
