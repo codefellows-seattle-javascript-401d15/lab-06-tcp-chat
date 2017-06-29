@@ -1,0 +1,22 @@
+{
+  "name": "caleb-lab",
+  "version": "1.0.0",
+  "description": "schizophrenic tcp chat[this only works if you talk to yourself in node]",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "eslint": "eslint",
+    "start": "nodemon server.js"
+  },
+  "author": "aesthetiques",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "mocha": "^3.3.0"
+  },
+  "dependencies": {
+    "node-uuid": "^1.4.8",
+    "uuid": "^3.0.1"
+  }
+}
