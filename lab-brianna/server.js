@@ -16,6 +16,7 @@ ee.on('default', (client, string) => {
 
 //sends a message to all users
 ee.on('\\all', (client, string) => {
+  console.log('this is the \\all command');
   pool.forEach(c => c.socket.write(`${client.nickName}: ${string}`));
 });
 
@@ -62,7 +63,7 @@ server.on('connection', socket => {
 
   socket.on('data', data => {
     let command = data.toString().split(' ').shift().trim();
-    if(command.startsWith('@')) {
+    if(command.startsWith('\\')) {
       ee.emit(command, client, data.toString().split(' ').slice(1).join(' '));
       return;
     }
